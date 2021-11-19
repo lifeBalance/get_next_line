@@ -1,0 +1,7 @@
+.DS_Store
+main.c
+a.out
+*.o
+*.a
+*.swp
+test
