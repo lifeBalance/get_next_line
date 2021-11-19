@@ -1,0 +1,17 @@
+#include "get_next_line.h"
+#include "libft.h"
+
+int main(void)
+{
+	get_next_line(1, NULL);
+	return (0);
+}
+
+/*
+** Create a symlink in the root of the project with:
+**		ln -s eval_tests/main.c.test main.c
+** (Make sure you .gitignore the main.c symlink!)
+**
+** Compile with:
+**		gcw -I libft/includes -L libft -lft get_next_line.c main.c
+*/
