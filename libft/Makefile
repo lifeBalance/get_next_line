@@ -6,7 +6,7 @@
 #    By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/29 11:09:58 by rodrodri          #+#    #+#              #
-#    Updated: 2021/11/20 00:06:31 by rodrodri         ###   ########.fr        #
+#    Updated: 2021/11/20 01:23:51 by rodrodri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,7 +82,7 @@ SRCS	=	ft_memset.c		\
 
 OBJS	=	$(SRCS:.c=.o)
 
-HDRS	=	libft.h
+HDRS	=	includes
 
 .PHONY:	all clean fclean re
 
