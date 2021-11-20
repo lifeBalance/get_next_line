@@ -1,7 +1,9 @@
 .DS_Store
-main.c
-a.out
+*.swp
 *.o
 *.a
-*.swp
-test
+a.out
+main.c
+test_gnl
+Makefile
+*.txt
