@@ -9,6 +9,7 @@ int main(int argc, char **argv)
 	int		fd;
 	int		ret;
 	int		i;
+	int		num_lines;
 
 	if (argc < 2)
 		write(2, "File name missing.\n", 19);
@@ -18,17 +19,18 @@ int main(int argc, char **argv)
 	{
 		line = NULL;
 		fd = open(argv[1], O_RDONLY);
+		num_lines = 4; // Control # of calls
 		i = 1;
-		while (i++ <= 3) // Quick & dirty way to control # of calls
+		while (i++ <= num_lines)
 		{
 			ret = get_next_line(fd, &line);
 			if (ret == -1)
 				ft_putendl("* Error while reading!");
-			ft_putstr(line);
+			printf("Returned: |%s|\n", line); // Print the returned line.
 			if (ret == 0)
-				ft_putendl("\n* Finished reading file!");
+				ft_putendl("* Finished reading file.");
+			ft_strdel(&line);
 		}
-		ft_strdel(&line);
 		close(fd);
 	}
 	return (0);
