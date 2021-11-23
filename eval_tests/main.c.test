@@ -26,9 +26,10 @@ int main(int argc, char **argv)
 			ret = get_next_line(fd, &line);
 			if (ret == -1)
 				ft_putendl("* Error while reading!");
-			printf("Returned: |%s|\n", line); // Print the returned line.
-			if (ret == 0)
-				ft_putendl("* Finished reading file.");
+			else if (ret == 0)
+				ft_putendl("* End of file.");
+			else
+				printf("%s\n", line);
 			ft_strdel(&line);
 		}
 		close(fd);
