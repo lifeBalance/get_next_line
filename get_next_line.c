@@ -6,12 +6,11 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 23:00:34 by rodrodri          #+#    #+#             */
-/*   Updated: 2021/11/23 22:44:40 by rodrodri         ###   ########.fr       */
+/*   Updated: 2021/11/23 23:06:44 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "libft.h"
 
 int	get_next_line(const int fd, char **line)
 {

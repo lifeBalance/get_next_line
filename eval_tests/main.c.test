@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 	{
 		line = NULL;
 		fd = open(argv[1], O_RDONLY);
-		num_lines = 4; // Control # of calls
+		num_lines = 10; // Control # of calls
 		i = 1;
 		while (i++ <= num_lines)
 		{
