@@ -11,15 +11,26 @@ int main(int argc, char **argv)
 	int		i;
 	int		num_lines;
 
-	if (argc < 2)
-		write(2, "File name missing.\n", 19);
-	else if (argc > 2)
-		write(2, "Too many arguments.\n", 20);
-	else
+	// printf("ret: %d\n", get_next_line(-99, NULL));
+	// printf("ret: %d\n", get_next_line(-1, NULL));
+	// printf("ret: %d\n", get_next_line(-10000, NULL));
+
+	// printf("ret: %d\n", get_next_line(1, NULL)); // fildes 1 is stdout
+	// printf("ret: %d\n", get_next_line(2, NULL)); // fildes 3 is stderr
+	// printf("ret: %d\n", get_next_line(99, NULL));
+
+	// printf("ret: %d\n", get_next_line(-99, &line));
+	// printf("ret: %d\n", get_next_line(-1, &line));
+	// printf("ret: %d\n", get_next_line(-10000, &line));
+	// return (0);
+
+	num_lines = 2; // Control # of calls
+	if (argc > 2)
+		ft_putendl("Too many arguments.");
+	else if (argc == 2)
 	{
-		line = NULL;
 		fd = open(argv[1], O_RDONLY);
-		num_lines = 3; // Control # of calls
+		// printf("FD: |%d|\n", fd);
 		i = 1;
 		while (i++ <= num_lines)
 		{
@@ -29,10 +40,27 @@ int main(int argc, char **argv)
 			else if (ret == 0)
 				ft_putendl("* End of file.");
 			else
-				printf("%s\n", line);
+				ft_putstr(line);
 			ft_strdel(&line);
 		}
 		close(fd);
+	}
+	else if (argc == 1)
+	{
+		fd = 0;		// read from stdin file descriptor
+		i = 1;
+		while (i++ <= num_lines)
+		{
+			ret = get_next_line(fd, &line);
+			// printf("FD: |%d|\n", fd);
+			if (ret == -1)
+				ft_putendl("* Error while reading!");
+			else if (ret == 0)
+				ft_putendl("* End of file.");
+			else
+				ft_putstr(line);
+			ft_strdel(&line);
+		}
 	}
 	return (0);
 }

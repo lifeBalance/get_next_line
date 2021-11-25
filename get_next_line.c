@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 23:00:34 by rodrodri          #+#    #+#             */
-/*   Updated: 2021/11/25 11:59:41 by rodrodri         ###   ########.fr       */
+/*   Updated: 2021/11/25 22:14:52 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,23 @@
 int	get_next_line(const int fd, char **ln)
 {
 	static char		buf[BUFF_SIZE + 1] = {0};
-	static size_t	rem = 0;
-	size_t			bytes_read;
+	int				bytes_read;
 	char			*tmp_ln;
 	size_t			tmp_len;
 
 	tmp_ln = NULL;
 	tmp_len = 0;
-	bytes_read = read(fd, buf + rem, BUFF_SIZE - rem) + rem;
-	if (bytes_read > 0 || rem)
-	{
-		if (ft_strlen(buf) == 8 && !ft_strchr(buf, '\n'))
-			if (build_ln(fd, &tmp_ln, buf, &tmp_len) == -1)
-				return (-1);
-		if (end_ln(ln, tmp_ln, buf, &rem) == -1)
+	if (fd == 1 || fd == 2)
+		return (-1);
+	bytes_read = read(fd, buf + ft_strlen(buf), BUFF_SIZE - ft_strlen(buf));
+	if (bytes_read < 0 || (bytes_read == 0 && ft_strlen(buf) == 0))
+		return (bytes_read);
+	if (ft_strlen(buf) == 8 && !ft_strchr(buf, '\n'))
+		if (build_ln(fd, &tmp_ln, buf, &tmp_len) == -1)
 			return (-1);
-		return (1);
-	}
-	return (bytes_read);
+	if (end_ln(ln, tmp_ln, buf) == -1)
+		return (-1);
+	return (1);
 }
 
 int	build_ln(int fd, char **tmp_ln, char *buf, size_t *tmp_len)
@@ -74,7 +73,7 @@ int	build_lst(int fd, char *buf, t_list **ln_lst, size_t *tmp_len)
 	return (0);
 }
 
-int	end_ln(char **ln, char *tmp_ln, char *buf, size_t *rem)
+int	end_ln(char **ln, char *tmp_ln, char *buf)
 {
 	size_t	ending_len;
 	size_t	tmp_len;
@@ -96,7 +95,6 @@ int	end_ln(char **ln, char *tmp_ln, char *buf, size_t *rem)
 	ft_strdel(&tmp_ln);
 	ft_memmove(buf, buf + (ending_len + 1), BUFF_SIZE - (ending_len + 1));
 	ft_strclr(buf + BUFF_SIZE - (ending_len + 1));
-	*rem = (ft_strlen(buf));
 	return (0);
 }
 
