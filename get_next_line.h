@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 23:00:56 by rodrodri          #+#    #+#             */
-/*   Updated: 2021/11/23 23:07:53 by rodrodri         ###   ########.fr       */
+/*   Updated: 2021/11/24 23:22:54 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 /*
 ** Macro Definitions.
 */
-# define BUFF_SIZE 9999
+# define BUFF_SIZE 8
 
 /*
 ** Nested Headers.
@@ -27,8 +27,9 @@
 ** Function Prototypes.
 */
 int		get_next_line(const int fd, char **line);
-void	build_line(int fd, char **line, char *buf, size_t *rem);
-size_t	end_line(char **ln, char *buf);
+int		build_ln(int fd, char **tmp_ln, char *buf, size_t *ln_len);
+int		build_lst(int fd, char *buf, t_list **ln_lst, size_t *tmp_len);
+int		end_ln(char **ln, char *tmp_ln, char *buf, size_t *rem);
 void	free_willy(void *content, size_t content_size);
 
 #endif

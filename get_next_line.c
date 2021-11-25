@@ -6,75 +6,98 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 23:00:34 by rodrodri          #+#    #+#             */
-/*   Updated: 2021/11/23 23:06:44 by rodrodri         ###   ########.fr       */
+/*   Updated: 2021/11/25 11:59:41 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	get_next_line(const int fd, char **line)
+int	get_next_line(const int fd, char **ln)
 {
-	static char		buf[BUFF_SIZE];
+	static char		buf[BUFF_SIZE + 1] = {0};
 	static size_t	rem = 0;
 	size_t			bytes_read;
+	char			*tmp_ln;
+	size_t			tmp_len;
 
+	tmp_ln = NULL;
+	tmp_len = 0;
 	bytes_read = read(fd, buf + rem, BUFF_SIZE - rem) + rem;
 	if (bytes_read > 0 || rem)
 	{
-		build_line(fd, line, buf, &rem);
+		if (ft_strlen(buf) == 8 && !ft_strchr(buf, '\n'))
+			if (build_ln(fd, &tmp_ln, buf, &tmp_len) == -1)
+				return (-1);
+		if (end_ln(ln, tmp_ln, buf, &rem) == -1)
+			return (-1);
 		return (1);
 	}
 	return (bytes_read);
 }
 
-void	build_line(int fd, char **line, char *buf, size_t *rem)
+int	build_ln(int fd, char **tmp_ln, char *buf, size_t *tmp_len)
 {
-	t_list			*line_lst;
-	size_t			ln_size;
+	t_list	*ln_lst;
 
-	ln_size = 0;
-	line_lst = NULL;
-	while (!ft_strchr(buf, '\n') && !ft_strchr(buf, '\0'))
+	ln_lst = NULL;
+	if (build_lst(fd, buf, &ln_lst, tmp_len) == -1)
+		return (-1);
+	*tmp_ln = ft_strnew(*tmp_len);
+	if (!(*tmp_ln))
+		return (-1);
+	while (ln_lst)
 	{
-		ft_lst_push_back(&line_lst,
-			ft_lstnew(ft_strsub(buf, 0, BUFF_SIZE), BUFF_SIZE));
-		ln_size += BUFF_SIZE;
-		ft_bzero(buf, BUFF_SIZE);
-		read(fd, buf, BUFF_SIZE);
+		ft_strcat(*tmp_ln, ln_lst->content);
+		ln_lst = ln_lst->next;
 	}
-	if (ft_strchr(buf, '\n'))
-		ln_size += ft_strchr(buf, '\n') - buf;
-	else if (ft_strchr(buf, '\0'))
-		ln_size += ft_strchr(buf, '\0') - buf;
-	*line = ft_strnew(ln_size);
-	while (line_lst)
-	{
-		ft_strcat(*line, line_lst->content);
-		line_lst = line_lst->next;
-	}
-	ft_lstdel(&line_lst, free_willy);
-	*rem = end_line(line, buf);
+	ft_lstdel(&ln_lst, free_willy);
+	return (0);
 }
 
-size_t	end_line(char **ln, char *buf)
+int	build_lst(int fd, char *buf, t_list **ln_lst, size_t *tmp_len)
 {
-	int		len_nl;
-	int		len_null;
+	t_list	*ln_node;
 
-	len_nl = ft_strchr(buf, '\n') - buf;
-	len_null = ft_strchr(buf, '\0') - buf;
-	if (len_nl >= 0)
+	while (ft_strlen(buf) == 8 && !ft_strchr(buf, '\n'))
 	{
-		ft_memcpy(*ln + ft_strlen(*ln), buf, len_nl);
-		ft_memmove(buf, buf + (len_nl + 1), BUFF_SIZE - (len_nl + 1));
-		ft_bzero(buf + BUFF_SIZE - (len_nl + 1), len_nl + 1);
+		ln_node = ft_lstnew(ft_strsub(buf, 0, BUFF_SIZE), BUFF_SIZE);
+		if (!ln_node)
+		{
+			ft_lstdel(ln_lst, free_willy);
+			return (-1);
+		}
+		*tmp_len += BUFF_SIZE;
+		ft_lst_push_back(ln_lst, ln_node);
+		ft_strclr(buf);
+		read(fd, buf, BUFF_SIZE);
 	}
-	else if (len_null >= 0)
-	{
-		ft_memcpy(*ln + ft_strlen(*ln), buf, len_null);
-		ft_bzero(buf, BUFF_SIZE);
-	}
-	return (ft_strlen(buf));
+	return (0);
+}
+
+int	end_ln(char **ln, char *tmp_ln, char *buf, size_t *rem)
+{
+	size_t	ending_len;
+	size_t	tmp_len;
+
+	ending_len = 0;
+	if (ft_strchr(buf, '\n'))
+		ending_len = ft_strchr(buf, '\n') - buf;
+	else if (ft_strchr(buf, '\0'))
+		ending_len = ft_strlen(buf);
+	tmp_len = 0;
+	if (tmp_ln)
+		tmp_len += ft_strlen(tmp_ln);
+	*ln = ft_strnew(tmp_len + ending_len);
+	if (!(*ln))
+		return (-1);
+	if (tmp_ln)
+		ft_strcpy(*ln, tmp_ln);
+	ft_memcpy(*ln + tmp_len, buf, ending_len);
+	ft_strdel(&tmp_ln);
+	ft_memmove(buf, buf + (ending_len + 1), BUFF_SIZE - (ending_len + 1));
+	ft_strclr(buf + BUFF_SIZE - (ending_len + 1));
+	*rem = (ft_strlen(buf));
+	return (0);
 }
 
 void	free_willy(void *content, size_t content_size)
