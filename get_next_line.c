@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 23:00:34 by rodrodri          #+#    #+#             */
-/*   Updated: 2021/11/25 22:14:52 by rodrodri         ###   ########.fr       */
+/*   Updated: 2021/11/26 19:51:08 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,92 +14,89 @@
 
 int	get_next_line(const int fd, char **ln)
 {
-	static char		buf[BUFF_SIZE + 1] = {0};
-	int				bytes_read;
-	char			*tmp_ln;
-	size_t			tmp_len;
+	static char	buf[BUFF_SIZE + 1] = {0};
+	int			bytes_read;
+	t_list		*ln_lst;
+	size_t		lst_len;
 
-	tmp_ln = NULL;
-	tmp_len = 0;
-	if (fd == 1 || fd == 2)
+	ln_lst = NULL;
+	lst_len = 0;
+	if (fd < 0 || fd == 1 || fd == 2 || !ln)
 		return (-1);
 	bytes_read = read(fd, buf + ft_strlen(buf), BUFF_SIZE - ft_strlen(buf));
 	if (bytes_read < 0 || (bytes_read == 0 && ft_strlen(buf) == 0))
 		return (bytes_read);
-	if (ft_strlen(buf) == 8 && !ft_strchr(buf, '\n'))
-		if (build_ln(fd, &tmp_ln, buf, &tmp_len) == -1)
-			return (-1);
-	if (end_ln(ln, tmp_ln, buf) == -1)
+	if (build_lst(fd, buf, &ln_lst, &lst_len) < 0)
+		return (-1);
+	if (build_ln(ln, buf, &ln_lst, lst_len) < 0)
 		return (-1);
 	return (1);
 }
 
-int	build_ln(int fd, char **tmp_ln, char *buf, size_t *tmp_len)
-{
-	t_list	*ln_lst;
-
-	ln_lst = NULL;
-	if (build_lst(fd, buf, &ln_lst, tmp_len) == -1)
-		return (-1);
-	*tmp_ln = ft_strnew(*tmp_len);
-	if (!(*tmp_ln))
-		return (-1);
-	while (ln_lst)
-	{
-		ft_strcat(*tmp_ln, ln_lst->content);
-		ln_lst = ln_lst->next;
-	}
-	ft_lstdel(&ln_lst, free_willy);
-	return (0);
-}
-
-int	build_lst(int fd, char *buf, t_list **ln_lst, size_t *tmp_len)
+int	build_lst(int fd, char *buf, t_list **ln_lst, size_t *lst_len)
 {
 	t_list	*ln_node;
+	int		bytes_read;
 
-	while (ft_strlen(buf) == 8 && !ft_strchr(buf, '\n'))
+	while (ft_strlen(buf) == BUFF_SIZE && !ft_strchr(buf, '\n'))
 	{
-		ln_node = ft_lstnew(ft_strsub(buf, 0, BUFF_SIZE), BUFF_SIZE);
+		*lst_len += BUFF_SIZE;
+		ln_node = ft_lstnew(buf, BUFF_SIZE + 1);
 		if (!ln_node)
 		{
 			ft_lstdel(ln_lst, free_willy);
 			return (-1);
 		}
-		*tmp_len += BUFF_SIZE;
 		ft_lst_push_back(ln_lst, ln_node);
 		ft_strclr(buf);
-		read(fd, buf, BUFF_SIZE);
+		bytes_read = read(fd, buf, BUFF_SIZE);
+		if (bytes_read < 0)
+		{
+			ft_lstdel(ln_lst, free_willy);
+			return (-1);
+		}
 	}
-	return (0);
+	if (*ln_lst && bytes_read == 0)
+		ft_strclr(buf);
+	return (bytes_read);
 }
 
-int	end_ln(char **ln, char *tmp_ln, char *buf)
+int	build_ln(char **ln, char *buf, t_list **ln_lst, size_t lst_len)
 {
-	size_t	ending_len;
-	size_t	tmp_len;
+	t_list	*tmp_lst;
+	size_t	buf_len;
 
-	ending_len = 0;
+	buf_len = 0;
 	if (ft_strchr(buf, '\n'))
-		ending_len = ft_strchr(buf, '\n') - buf;
-	else if (ft_strchr(buf, '\0'))
-		ending_len = ft_strlen(buf);
-	tmp_len = 0;
-	if (tmp_ln)
-		tmp_len += ft_strlen(tmp_ln);
-	*ln = ft_strnew(tmp_len + ending_len);
+		buf_len = ft_strchr(buf, '\n') - buf;
+	else if (ft_strlen(buf) < BUFF_SIZE)
+		buf_len = ft_strlen(buf);
+	*ln = ft_strnew(lst_len + buf_len);
 	if (!(*ln))
 		return (-1);
-	if (tmp_ln)
-		ft_strcpy(*ln, tmp_ln);
-	ft_memcpy(*ln + tmp_len, buf, ending_len);
-	ft_strdel(&tmp_ln);
-	ft_memmove(buf, buf + (ending_len + 1), BUFF_SIZE - (ending_len + 1));
-	ft_strclr(buf + BUFF_SIZE - (ending_len + 1));
+	tmp_lst = *ln_lst;
+	while (tmp_lst)
+	{
+		ft_strcat(*ln, tmp_lst->content);
+		tmp_lst = tmp_lst->next;
+	}
+	if (*ln_lst)
+		ft_lstdel(&tmp_lst, free_willy);
+	ft_memcpy(*ln + lst_len, buf, buf_len);
+	ft_memmove(buf, buf + (buf_len + 1), BUFF_SIZE - (buf_len + 1));
+	ft_strclr(buf + BUFF_SIZE - (buf_len + 1));
 	return (0);
 }
 
 void	free_willy(void *content, size_t content_size)
 {
 	free(content);
-	(void)content_size;
+	free((void *)content_size);
 }
+
+/*
+**	#include <stdio.h>// <---DELETE!!!
+**	printf("(get_next_line) buffer: |%s|\n", buf);// <---DELETE!!!
+**	printf("(get_next_line) buffer: |%s|\n", buf);// <---DELETE!!!
+**	printf("(build_ln) buffer: |%s|\n", buf);// <---DELETE!!!
+*/

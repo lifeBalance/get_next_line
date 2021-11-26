@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 	// printf("ret: %d\n", get_next_line(-10000, NULL));
 
 	// printf("ret: %d\n", get_next_line(1, NULL)); // fildes 1 is stdout
-	// printf("ret: %d\n", get_next_line(2, NULL)); // fildes 3 is stderr
+	// printf("ret: %d\n", get_next_line(2, NULL)); // fildes 2 is stderr
 	// printf("ret: %d\n", get_next_line(99, NULL));
 
 	// printf("ret: %d\n", get_next_line(-99, &line));
@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 	// printf("ret: %d\n", get_next_line(-10000, &line));
 	// return (0);
 
-	num_lines = 2; // Control # of calls
+	num_lines = 4; // Control # of calls
 	if (argc > 2)
 		ft_putendl("Too many arguments.");
 	else if (argc == 2)
