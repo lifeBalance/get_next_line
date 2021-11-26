@@ -6,11 +6,15 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 23:00:34 by rodrodri          #+#    #+#             */
-/*   Updated: 2021/11/26 19:51:08 by rodrodri         ###   ########.fr       */
+/*   Updated: 2021/11/26 23:04:57 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+static int	build_lst(int fd, char *buf, t_list **ln_lst, size_t *lst_len);
+static int	build_ln(char **ln, char *buf, t_list **ln_lst, size_t lst_len);
+static void	free_willy(void *content, size_t content_size);
 
 int	get_next_line(const int fd, char **ln)
 {
@@ -33,10 +37,10 @@ int	get_next_line(const int fd, char **ln)
 	return (1);
 }
 
-int	build_lst(int fd, char *buf, t_list **ln_lst, size_t *lst_len)
+static int	build_lst(int fd, char *buf, t_list **ln_lst, size_t *lst_len)
 {
 	t_list	*ln_node;
-	int		bytes_read;
+	size_t	bytes_read;
 
 	while (ft_strlen(buf) == BUFF_SIZE && !ft_strchr(buf, '\n'))
 	{
@@ -61,7 +65,7 @@ int	build_lst(int fd, char *buf, t_list **ln_lst, size_t *lst_len)
 	return (bytes_read);
 }
 
-int	build_ln(char **ln, char *buf, t_list **ln_lst, size_t lst_len)
+static int	build_ln(char **ln, char *buf, t_list **ln_lst, size_t lst_len)
 {
 	t_list	*tmp_lst;
 	size_t	buf_len;
@@ -81,17 +85,17 @@ int	build_ln(char **ln, char *buf, t_list **ln_lst, size_t lst_len)
 		tmp_lst = tmp_lst->next;
 	}
 	if (*ln_lst)
-		ft_lstdel(&tmp_lst, free_willy);
-	ft_memcpy(*ln + lst_len, buf, buf_len);
+		ft_lstdel(ln_lst, free_willy);
+	ft_strncat(*ln, buf, buf_len);
 	ft_memmove(buf, buf + (buf_len + 1), BUFF_SIZE - (buf_len + 1));
 	ft_strclr(buf + BUFF_SIZE - (buf_len + 1));
 	return (0);
 }
 
-void	free_willy(void *content, size_t content_size)
+static void	free_willy(void *content, size_t content_size)
 {
 	free(content);
-	free((void *)content_size);
+	(void)content_size;
 }
 
 /*
@@ -99,4 +103,6 @@ void	free_willy(void *content, size_t content_size)
 **	printf("(get_next_line) buffer: |%s|\n", buf);// <---DELETE!!!
 **	printf("(get_next_line) buffer: |%s|\n", buf);// <---DELETE!!!
 **	printf("(build_ln) buffer: |%s|\n", buf);// <---DELETE!!!
+**	printf("list before freeing: %p\n", *ln_lst);
+**	printf("list was freed: %p\n", *ln_lst);
 */
