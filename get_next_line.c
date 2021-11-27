@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 23:00:34 by rodrodri          #+#    #+#             */
-/*   Updated: 2021/11/26 23:04:57 by rodrodri         ###   ########.fr       */
+/*   Updated: 2021/11/28 00:56:37 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ static int	build_lst(int fd, char *buf, t_list **ln_lst, size_t *lst_len)
 			return (-1);
 		}
 	}
-	if (*ln_lst && bytes_read == 0)
-		ft_strclr(buf);
 	return (bytes_read);
 }
 
@@ -97,12 +95,3 @@ static void	free_willy(void *content, size_t content_size)
 	free(content);
 	(void)content_size;
 }
-
-/*
-**	#include <stdio.h>// <---DELETE!!!
-**	printf("(get_next_line) buffer: |%s|\n", buf);// <---DELETE!!!
-**	printf("(get_next_line) buffer: |%s|\n", buf);// <---DELETE!!!
-**	printf("(build_ln) buffer: |%s|\n", buf);// <---DELETE!!!
-**	printf("list before freeing: %p\n", *ln_lst);
-**	printf("list was freed: %p\n", *ln_lst);
-*/
