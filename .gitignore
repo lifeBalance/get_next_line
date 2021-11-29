@@ -1,10 +1,16 @@
-.DS_Store
-*.swp
-*.o
-*.a
-a.out
-main.c
-test_gnl
-Makefile
-*.txt
-README.md
+# Ignore everything
+*
+
+# Whitelist:
+!/.gitignore
+!/get_next_line.c
+!/get_next_line.h
+!/author
+
+# Whitelist directories:
+!*/
+
+# Whitelist specific files in the directory:
+!/eval_tests/*.txt
+!/eval_tests/main.c.test
+!/eval_tests/Makefile
