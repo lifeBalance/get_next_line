@@ -1,0 +1,91 @@
+#include "get_next_line.h"
+#include "libft.h"
+#include <fcntl.h>
+#include <stdio.h>
+
+int main(int argc, char **argv)
+{
+	char	*line;
+	int		fd;
+	int		ret;
+	int		i;
+	int		num_lines;
+
+	// printf("ret: %d\n", get_next_line(-99, NULL));
+	// printf("ret: %d\n", get_next_line(-1, NULL));
+	// printf("ret: %d\n", get_next_line(-10000, NULL));
+
+	// printf("ret: %d\n", get_next_line(1, NULL)); // fildes 1 is stdout
+	// printf("ret: %d\n", get_next_line(2, NULL)); // fildes 2 is stderr
+	// printf("ret: %d\n", get_next_line(99, NULL));
+
+	// printf("ret: %d\n", get_next_line(-99, &line));
+	// printf("ret: %d\n", get_next_line(-1, &line));
+	// printf("ret: %d\n", get_next_line(-10000, &line));
+	// return (0);
+
+	num_lines = 4; // Control # of calls
+	if (argc > 2)
+		ft_putendl("Too many arguments.");
+	else if (argc == 2)
+	{
+		fd = open(argv[1], O_RDONLY);
+		// printf("FD: |%d|\n", fd);
+		i = 1;
+		while (i++ <= num_lines)
+		{
+			ret = get_next_line(fd, &line);
+			if (ret == -1)
+				ft_putendl("* Error while reading!");
+			else if (ret == 0)
+				ft_putendl("* End of file.");
+			else if (ret == 1)
+				ft_putendl(line);
+			ft_strdel(&line);
+		}
+		// printf("ret: %d\n", ret);
+		close(fd);
+	}
+	else if (argc == 1)
+	{
+		fd = 0;		// read from stdin file descriptor
+		// printf("FD: |%d|\n", fd);
+		i = 1;
+		while (i++ <= num_lines)
+		{
+			ret = get_next_line(fd, &line);
+			if (ret == -1)
+				ft_putendl("* Error while reading!");
+			else if (ret == 0)
+				ft_putendl("* End of file.");
+			else if (ret == 1)
+				ft_putendl(line);
+			ft_strdel(&line);
+		}
+		// printf("ret: %d\n", ret);
+		close(fd);
+	}
+	return (0);
+}
+
+/*
+** 1. Create a symlink in the root of the project with:
+**		ln -s eval_tests/main.c.test main.c
+** (Make sure you .gitignore the main.c symlink!)
+**
+** 2. Make sure your static library exists (if you use it):
+**		make re -C libft
+**
+** 3. Compile with:
+**		gcw -I libft/includes -o get_next_line.o -c get_next_line.c
+**		gcw -I libft/includes -o main.o -c main.c
+**		gcw -o test_gnl main.o get_next_line.o -I libft/includes -L libft/ -lft
+**
+**	Or just... use the Makefile, Luke!
+*/
+
+/*
+**	For really big files (the bible), use the following commands:
+**		$ ./test_gnl bible.txt > my_bible.txt
+**		$ diff <(head -n 42 bible.txt) <(head -n 42 my_bible.txt)
+*/
