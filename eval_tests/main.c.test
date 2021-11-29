@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 	// printf("ret: %d\n", get_next_line(-10000, &line));
 	// return (0);
 
-	num_lines = 3; // Control # of calls
+	num_lines = 4; // Control # of calls
 	if (argc > 2)
 		ft_putendl("Too many arguments.");
 	else if (argc == 2)
@@ -35,32 +35,35 @@ int main(int argc, char **argv)
 		while (i++ <= num_lines)
 		{
 			ret = get_next_line(fd, &line);
-			// if (ret == -1)
-			// 	ft_putendl("* Error while reading!");
-			// else if (ret == 0)
-			// 	ft_putendl("* End of file.");
-			// else
+			if (ret == -1)
+				ft_putendl("* Error while reading!");
+			else if (ret == 0)
+				ft_putendl("* End of file.");
+			else if (ret == 1)
 				ft_putendl(line);
 			ft_strdel(&line);
 		}
+		// printf("ret: %d\n", ret);
 		close(fd);
 	}
 	else if (argc == 1)
 	{
 		fd = 0;		// read from stdin file descriptor
+		// printf("FD: |%d|\n", fd);
 		i = 1;
 		while (i++ <= num_lines)
 		{
 			ret = get_next_line(fd, &line);
-			printf("FD: |%d|\n", fd);
 			if (ret == -1)
 				ft_putendl("* Error while reading!");
 			else if (ret == 0)
 				ft_putendl("* End of file.");
-			else
+			else if (ret == 1)
 				ft_putendl(line);
 			ft_strdel(&line);
 		}
+		// printf("ret: %d\n", ret);
+		close(fd);
 	}
 	return (0);
 }
