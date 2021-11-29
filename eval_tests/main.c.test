@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 	// printf("ret: %d\n", get_next_line(-10000, &line));
 	// return (0);
 
-	num_lines = 100265; // Control # of calls
+	num_lines = 3; // Control # of calls
 	if (argc > 2)
 		ft_putendl("Too many arguments.");
 	else if (argc == 2)
