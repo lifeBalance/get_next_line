@@ -4,7 +4,7 @@ FLAGS	=	-Wall -Werror -Wextra
 
 HDRS	=	../libft/includes
 
-CC		= clang
+CC		=	clang
 
 all: $(NAME)
 

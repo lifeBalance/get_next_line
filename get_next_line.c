@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 23:00:34 by rodrodri          #+#    #+#             */
-/*   Updated: 2021/11/29 21:12:04 by rodrodri         ###   ########.fr       */
+/*   Updated: 2021/12/01 17:53:52 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static int	read_ln(int fd, char *buf, t_list **ln_lst, size_t *lst_len);
 static int	build_ln(char **ln, char *buf, t_list **ln_lst, size_t lst_len);
-static void	free_willy(void *content, size_t content_size);
 
 int	get_next_line(const int fd, char **ln)
 {
@@ -33,7 +32,7 @@ int	get_next_line(const int fd, char **ln)
 	if (ret < 0 || build_ln(ln, buf, &ln_lst, lst_len) < 0)
 	{
 		if (ln_lst)
-			ft_lstdel(&ln_lst, free_willy);
+			ft_lstdel(&ln_lst, ft_lstdelcont);
 		return (-1);
 	}
 	return (1);
@@ -53,7 +52,7 @@ static int	read_ln(int fd, char *buf, t_list **ln_lst, size_t *lst_len)
 		ln_node = ft_lstnew(buf, BUFF_SIZE + 1);
 		if (!ln_node)
 			return (-1);
-		ft_lst_push_back(ln_lst, ln_node);
+		ft_lstappend(ln_lst, ln_node);
 		ft_strclr(buf);
 		ret = read(fd, buf, BUFF_SIZE);
 	}
@@ -82,15 +81,9 @@ static int	build_ln(char **ln, char *buf, t_list **ln_lst, size_t lst_len)
 		tmp_lst = tmp_lst->next;
 	}
 	if (*ln_lst)
-		ft_lstdel(ln_lst, free_willy);
+		ft_lstdel(ln_lst, ft_lstdelcont);
 	ft_strncat(*ln, buf, buf_len);
 	ft_memmove(buf, buf + (buf_len + 1), BUFF_SIZE - (buf_len + 1));
 	ft_strclr(buf + BUFF_SIZE - (buf_len + 1));
 	return (0);
-}
-
-static void	free_willy(void *content, size_t content_size)
-{
-	free(content);
-	(void )content_size;
 }

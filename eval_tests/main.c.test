@@ -67,25 +67,9 @@ int main(int argc, char **argv)
 	}
 	return (0);
 }
-
-/*
-** 1. Create a symlink in the root of the project with:
-**		ln -s eval_tests/main.c.test main.c
-** (Make sure you .gitignore the main.c symlink!)
-**
-** 2. Make sure your static library exists (if you use it):
-**		make re -C libft
-**
-** 3. Compile with:
-**		gcw -I libft/includes -o get_next_line.o -c get_next_line.c
-**		gcw -I libft/includes -o main.o -c main.c
-**		gcw -o test_gnl main.o get_next_line.o -I libft/includes -L libft/ -lft
-**
-**	Or just... use the Makefile, Luke!
-*/
-
 /*
 **	For really big files (the bible), use the following commands:
 **		$ ./test_gnl bible.txt > my_bible.txt
 **		$ diff <(head -n 42 bible.txt) <(head -n 42 my_bible.txt)
 */
+/* vi: filetype=c */
