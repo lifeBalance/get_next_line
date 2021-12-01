@@ -6,90 +6,95 @@
 #    By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/29 11:09:58 by rodrodri          #+#    #+#              #
-#    Updated: 2021/11/20 01:23:51 by rodrodri         ###   ########.fr        #
+#    Updated: 2021/11/30 16:55:19 by rodrodri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-
 
 NAME	=	libft.a
 
 FLAGS	=	-Wall -Werror -Wextra
 
-SRCS	=	ft_memset.c		\
-			ft_bzero.c		\
-			ft_memcpy.c		\
-			ft_memccpy.c	\
-			ft_memmove.c	\
-			ft_memchr.c		\
-			ft_memcmp.c		\
-			ft_strlen.c		\
-			ft_strdup.c		\
-			ft_strcpy.c		\
-			ft_strncpy.c	\
-			ft_strcat.c		\
-			ft_strncat.c	\
-			ft_strlcat.c	\
-			ft_strchr.c		\
-			ft_strrchr.c	\
-			ft_strstr.c		\
-			ft_strnstr.c	\
-			ft_strcmp.c		\
-			ft_strncmp.c	\
-			ft_atoi.c		\
-			ft_isalpha.c	\
-			ft_isdigit.c	\
-			ft_isalnum.c	\
-			ft_isascii.c	\
-			ft_isprint.c	\
-			ft_toupper.c	\
-			ft_tolower.c	\
+FUNS	=	ft_memset	\
+			ft_bzero	\
+			ft_memcpy	\
+			ft_memccpy	\
+			ft_memmove	\
+			ft_memchr	\
+			ft_memcmp	\
+			ft_strlen	\
+			ft_strdup	\
+			ft_strcpy	\
+			ft_strncpy	\
+			ft_strcat	\
+			ft_strncat	\
+			ft_strlcat	\
+			ft_strchr	\
+			ft_strrchr	\
+			ft_strstr	\
+			ft_strnstr	\
+			ft_strcmp	\
+			ft_strncmp	\
+			ft_atoi		\
+			ft_isalpha	\
+			ft_isdigit	\
+			ft_isalnum	\
+			ft_isascii	\
+			ft_isprint	\
+			ft_toupper	\
+			ft_tolower	\
 \
-			ft_memalloc.c	\
-			ft_memdel.c		\
-			ft_strnew.c		\
-			ft_strdel.c		\
-			ft_strclr.c		\
-			ft_striter.c	\
-			ft_striteri.c	\
-			ft_strmap.c		\
-			ft_strmapi.c	\
-			ft_strequ.c		\
-			ft_strnequ.c	\
-			ft_strsub.c		\
-			ft_strjoin.c	\
-			ft_strtrim.c	\
-			ft_strsplit.c	\
-			ft_itoa.c		\
-			ft_putchar.c	\
-			ft_putstr.c		\
-			ft_putendl.c	\
-			ft_putnbr.c		\
-			ft_putchar_fd.c	\
-			ft_putstr_fd.c	\
-			ft_putendl_fd.c	\
-			ft_putnbr_fd.c	\
+			ft_memalloc	\
+			ft_memdel	\
+			ft_strnew	\
+			ft_strdel	\
+			ft_strclr	\
+			ft_striter	\
+			ft_striteri	\
+			ft_strmap	\
+			ft_strmapi	\
+			ft_strequ	\
+			ft_strnequ	\
+			ft_strsub	\
+			ft_strjoin	\
+			ft_strtrim	\
+			ft_strsplit	\
+			ft_itoa		\
+			ft_putchar	\
+			ft_putstr	\
+			ft_putendl	\
+			ft_putnbr	\
+			ft_putchar_fd	\
+			ft_putstr_fd	\
+			ft_putendl_fd	\
+			ft_putnbr_fd	\
 \
-			ft_lstnew.c		\
-			ft_lstdelone.c	\
-			ft_lstdel.c		\
-			ft_lstadd.c		\
-			ft_lstiter.c	\
-			ft_lstmap.c		\
+			ft_lstnew		\
+			ft_lstdelone	\
+			ft_lstdel		\
+			ft_lstadd		\
+			ft_lstiter		\
+			ft_lstmap		\
 \
-			ft_isspace.c	\
-			ft_strrev.c		\
-			ft_lst_push_back.c
+			ft_isspace		\
+			ft_strrev		\
+			ft_lstappend	\
+			ft_lstdelnode	\
+			ft_lstdelcont
+
+SRCS	=	$(FUNS:=.c)
 
 OBJS	=	$(SRCS:.c=.o)
 
-HDRS	=	includes
+HDRS	=	./includes
+
+CC		=	clang
 
 .PHONY:	all clean fclean re
 
 all:	$(NAME)
 
 $(NAME):	$(SRCS) $(HDRS)
-	@gcc $(FLAGS) $(SRCS) -I $(HDRS) -c
+	@$(CC) $(FLAGS) $(SRCS) -I $(HDRS) -c
 	@ar rcs $(NAME) $(OBJS)
 
 clean:
