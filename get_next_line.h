@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 23:00:56 by rodrodri          #+#    #+#             */
-/*   Updated: 2021/11/29 21:13:19 by rodrodri         ###   ########.fr       */
+/*   Updated: 2021/12/04 17:52:28 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 /*
 ** Macro Definitions.
 */
-# define BUFF_SIZE 8
+# define BUFF_SIZE 12
 
 /*
 ** Nested Headers.
@@ -27,5 +27,16 @@
 ** Function Prototypes.
 */
 int		get_next_line(const int fd, char **line);
+
+/*
+** Type definitions.
+*/
+typedef struct s_bfd
+{
+	char	bf[BUFF_SIZE + 1];
+	int		fd;
+	t_list	*lst;
+	size_t	len;
+}	t_bfd;
 
 #endif
