@@ -11,6 +11,9 @@
 !*/
 
 # Whitelist specific files in the directory:
+!/libft/*.c
+!/libft/Makefile
+!/libft/includes/libft.h
 !/eval_tests/*.txt
 !/eval_tests/main.c.test
 !/eval_tests/Makefile
