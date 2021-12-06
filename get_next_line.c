@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 23:00:34 by rodrodri          #+#    #+#             */
-/*   Updated: 2021/12/04 18:50:44 by rodrodri         ###   ########.fr       */
+/*   Updated: 2021/12/06 19:40:18 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ static int	set_buf(int fd, t_list **b)
 	t_list	*start;
 	t_bfd	tmp_cont;
 
-	tmp_cont = init_bfd(fd);
 	start = *b;
 	while (*b && ((t_bfd *)((*b)->content))->fd != fd)
 	{
@@ -109,6 +108,7 @@ static int	set_buf(int fd, t_list **b)
 	}
 	if (*b == NULL || ((t_bfd *)((*b)->content))->fd != fd)
 	{
+		tmp_cont = init_bfd(fd);
 		tmp_node = ft_lstnew(&tmp_cont, sizeof(tmp_cont));
 		if (!tmp_node)
 			return (-1);
@@ -123,17 +123,12 @@ static t_bfd	init_bfd(int fd)
 }
 
 /*
-** Another way of initializing the nested struct (do it before releasing it):
-**		(tmp_cont->fd) = fd;
-**		(tmp_cont->lst) = NULL;
-**		ft_strclr((tmp_cont->bf));
-** Or like this:
-**		((t_bfd *)(tmp_node->content))->fd = fd;
-**		((t_bfd *)(tmp_node->content))->lst = NULL;
-**		ft_strclr(((t_bfd *)(tmp_node->content))->bf);
-** Or like this:
-**		((t_bfd *)((*b)->content))->fd = fd;
-**		((t_bfd *)((*b)->content))->lst = NULL;
-**		ft_strclr(((t_bfd *)((*b)->content))->bf);
-**	Or, or, or... how about don't ALLOCATE IT IN THE HEAP, YOU MUPPET!!
+** Find out why I have to use init_bfd to initialize the structure, instead
+** of:
+**		ft_strclr(tmp_cont.bf);
+**		tmp_cont.fd = fd;
+**		tmp_cont.lst = NULL;
+**		tmp_cont.len = 0;
+** A designated initializer also works (but the Norm forbids their use):
+**		t_bfd	tmp_cont = {"", fd, NULL, 0};
 */

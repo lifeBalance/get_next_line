@@ -109,6 +109,4 @@ The last two lines of this function (before the last `return` statement) are use
 * Another one to `ft_strclr`, which **clears** (setting all positions to `\0`) from the position of the just shifted `\n` to the end of the buffer.
 
 ## TODO
-- [ ] Move the call to `init_bfd` within the `if` statement.
-- [ ] `tmp_lst` is unnecessary, since we're **destroying** the list after we copy its contents to the string.
-- [ ] Check if the call to `ft_strclr` in `build_ln` is necessary.
+- [x] Move the call to `init_bfd` within the `if` statement.
