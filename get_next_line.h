@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 23:00:56 by rodrodri          #+#    #+#             */
-/*   Updated: 2021/12/04 17:52:28 by rodrodri         ###   ########.fr       */
+/*   Updated: 2021/12/06 17:48:47 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 /*
 ** Macro Definitions.
 */
-# define BUFF_SIZE 12
+# define BUFF_SIZE 32
 
 /*
 ** Nested Headers.

@@ -6,6 +6,7 @@
 !/get_next_line.c
 !/get_next_line.h
 !/author
+!/README.md
 
 # Whitelist directories:
 !*/
