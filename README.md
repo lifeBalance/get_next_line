@@ -23,7 +23,7 @@ When I started the project, I decided to take it as a chance to learn and practi
 1. `get_next_line` to control the whole process.
 1. `set_buf` to set the **head** on a [circular linked-list](https://en.wikipedia.org/wiki/Linked_list#Circular_linked_list).
 2. `read_ln` to read to buffer in the current **head** of the circular linked list.
-3. `build_ln`, to allocate memory in the heap for the `line`, based on the **length of the strings** in the nested linked list (if any) plus the **length of the buffer**. Then it fixes the buffer for the next call.
+3. `build_ln`, to allocate memory in the heap for the `line`, based on the **length of the strings** in the nested linked list (if any) plus the **remaining contents of the buffer** (up to a `\n` or the final `\0`). Then it fixes the buffer for the next call.
 4. `init_bfd` is just a silly helper function to initialize the values in the structure used as `content` in the nodes of the circular linked list.
 
 Since we may have to perform multiple `read` operations, we'll need some place to put all the bytes we're reading. We need a data structure capable of growing dynamically, so a **linked-list** sounds like a perfect fit!
@@ -38,8 +38,6 @@ It receives a [file descriptor](https://en.wikipedia.org/wiki/File_descriptor) a
 1. The first thing this function does is to traverse the circular list to check if there's any node whose `fd` member is the same as the `fd` of the current call. If there's one, `b` is set to that node.
 
 2. If there's not such a node, the `if` statement will create a new node using the `ft_clst_add` function, which is a new addition to `libft`. This function adds a new node to the circular list, and sets its head to this newly added node.
-
-- [] Move the call to `init_bfd` within the `if` statement.
 
 #### Content of the circular list nodes
 For this purpose I declared the following structure in my `get_next_line.h`:
@@ -73,15 +71,13 @@ The first thing it does is to declare and assign a local variable named `buf`, t
 
 The return value of the `read` operation, is assigned to `ret`, which can have 3 values:
 
-	- A **positive number** which indicates how many bytes were read.
-	- `0`, if the `read` operation reached the **end of the file**. In this case, we also have to check if the buffer is empty. In that case, we are done.
-	- `-1`, which indicates an **error**, so we won't enter the next `while` loop, and the test of line 62 will deal with the return value of this function, which in turn will be properly handled in `get_next_line`.
+- A **positive number** which indicates how many bytes were read.
+- `0`, if the `read` operation reached the **end of the file**. In this case, we also have to check if the buffer is empty. In that case, we are done.
+- `-1`, which indicates an **error**, so we won't enter the next `while` loop, and the test of line 62 will deal with the return value of this function, which in turn will be properly handled in `get_next_line`.
 
 > If the `read` operation yields `0` or `-1`, we won't enter the following loop.
 
 For the **positive number** scenario, we are gonna use a `while` **loop**. Once we go inside, we'll keep adding nodes to the nested linked-list, and **clearing the buffer** right after (we don't want garbage from a previous read messing the buffer contents after a `\n` character.
-
-- [] Check if the call to `ft_strclr` is necessary.
 
 ### Storing buffer content in a linked-list
 For the scenario where our `buffer` is not big enough to accomodate a line, we'll store as many `read` chunks as needed in the **nested singly linked-list** of `b`. So after each `read` operation, if the buffer doesn't contain a `\n`, we have to flush the buffer onto the mentioned list. At the same time, we'll increase by `BUF_SIZE` bytes the `len` member, which at the end should contain the amount of bytes in our linked list.
@@ -102,8 +98,6 @@ Within this function we declare three variables:
 * `b_len` to measure the remaining characters in the buffer.
 * `buf` which is used to make more comfy to access the `content` member of the **selected node** in the circular list.
 
-- [] `tmp_lst` is unnecessary, since we're **destroying** the list after we copy its contents to the string.
-
 Then we allocate space in memory for a string using the value of the `len` member, and we assign that memory area to the `ln` parameter; now we have to traverse the list, concatenating the node contents to the `ln` string.
 
 Then we have to **delete the list**. Finally, we'll concatenate the contents of the `buffer` (a string that contains a `\n` or a `\0`.
@@ -113,3 +107,8 @@ The last two lines of this function (before the last `return` statement) are use
 
 * One to `ft_memmove`, which copy the contents after the `\n` to the beginning of the buffer.
 * Another one to `ft_strclr`, which **clears** (setting all positions to `\0`) from the position of the just shifted `\n` to the end of the buffer.
+
+## TODO
+- [ ] Move the call to `init_bfd` within the `if` statement.
+- [ ] `tmp_lst` is unnecessary, since we're **destroying** the list after we copy its contents to the string.
+- [ ] Check if the call to `ft_strclr` in `build_ln` is necessary.
