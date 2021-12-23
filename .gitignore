@@ -17,5 +17,6 @@
 !/libft/Makefile
 !/libft/includes/libft.h
 !/eval_tests/*.txt
+!/eval_tests/*.pdf
 !/eval_tests/main.c.test
 !/eval_tests/Makefile
